@@ -10,7 +10,7 @@ public class WSTHelper : BasePlugin
 {
     Dictionary<string, Vector[]> wstSpawns = new Dictionary<string, Vector[]>();
     public override string ModuleName => "WSTHelper";
-    public override string ModuleVersion => "0.6";
+    public override string ModuleVersion => "0.7";
     public override string ModuleAuthor => "dustOff";
 
     public override void Load(bool hotReload)
@@ -52,6 +52,11 @@ public class WSTHelper : BasePlugin
 
             return leaderboardData;
         }
+    }
+    private string FormatTime(double seconds)
+    {
+        TimeSpan timeSpan = TimeSpan.FromSeconds(seconds);
+        return $"{(int)timeSpan.TotalMinutes}:{timeSpan.Seconds:D2}";
     }
 
     [ConsoleCommand("reset", "Reset to initial spawn.")]
@@ -126,10 +131,13 @@ public class WSTHelper : BasePlugin
         if (leaderboardData.Count > 0)
         {
             var lowestTimes = leaderboardData.OrderBy(kvp => kvp.Value).Take(5);
+
             player.PrintToChat("Top 5 Times:");
+
             foreach (var kvp in lowestTimes)
             {
-                player.PrintToChat($"{kvp.Key}, Time: {kvp.Value}");
+                string formattedTime = FormatTime(kvp.Value);
+                player.PrintToChat($"{kvp.Key}, Time: {formattedTime}");
             }
         }
         else
