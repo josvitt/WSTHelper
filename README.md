@@ -1,7 +1,7 @@
 # WSTHelper
 Poorly made plugin to add !chat commands to cs2-surftimer
 
-!reset, !r to reset to first stage
+!reset, to reset to first stage
 this should be working for surf_beginner, surf_utopia_njv, surf_mesa_revo, surf_kitsune
 (spawn is hardcoded in plugin for these maps specifically so new maps or different spawn locations would have to be defined manually at this time)
 
