@@ -3,7 +3,6 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Utils;
-using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace WSTHelper;
@@ -11,7 +10,7 @@ public class WSTHelper : BasePlugin
 {
     Dictionary<string, Vector[]> wstSpawns = new Dictionary<string, Vector[]>();
     public override string ModuleName => "WSTHelper";
-    public override string ModuleVersion => "0.5";
+    public override string ModuleVersion => "0.6";
     public override string ModuleAuthor => "dustOff";
 
     public override void Load(bool hotReload)
@@ -29,19 +28,20 @@ public class WSTHelper : BasePlugin
         public Dictionary<string, double> ParseLeaderboard(string filePath)
         {
             Dictionary<string, double> leaderboardData = new Dictionary<string, double>();
+
             try
             {
                 string fileContent = File.ReadAllText(filePath);
-                var matches = Regex.Matches(fileContent, "\"name\"\\s+\"([^\"]+)\"\\s+\"time\"\\s+\"([^\"]+)\"");
+                var matches = Regex.Matches(fileContent, "\"time\"\\s+\"([^\"]+)\"\\s+\"name\"\\s+\"([^\"]+)\"");
+
                 foreach (Match match in matches)
                 {
-                    string username = match.Groups[1].Value;
-                    double time;
+                    string username = match.Groups[2].Value;
+                    double seconds;
 
-                    // Try to parse the time, and if successful, add to the dictionary
-                    if (double.TryParse(match.Groups[2].Value, out time))
+                    if (double.TryParse(match.Groups[1].Value, out seconds))
                     {
-                        leaderboardData.Add(username, time);
+                        leaderboardData.Add(username, seconds);
                     }
                 }
             }
@@ -49,6 +49,7 @@ public class WSTHelper : BasePlugin
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
+
             return leaderboardData;
         }
     }
@@ -81,8 +82,8 @@ public class WSTHelper : BasePlugin
         }
     }
 
-    [ConsoleCommand("wst_r", "Reset to initial spawn.")]
-    public void OnCommandWSTR(CCSPlayerController? player, CommandInfo command)
+    [ConsoleCommand("r", "Reset to initial spawn.")]
+    public void OnCommandR(CCSPlayerController? player, CommandInfo command)
     {
         if (player == null)
         {
